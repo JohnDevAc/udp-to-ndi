@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <Authors>John Lightfoot</Authors>
+    <Copyright>Copyright (c) 2026 John Lightfoot</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <ApplicationIcon>assets\app.ico</ApplicationIcon>
+    <AssemblyName>UDP to NDI</AssemblyName>
+    <DefaultItemExcludes>$(DefaultItemExcludes);tools/**;dist/**;test-results/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

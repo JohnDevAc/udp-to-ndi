@@ -1,0 +1,28 @@
+UDP to NDI - bundled components
+
+Microsoft .NET 8 and Windows Desktop runtime
+Included with this application so a separate .NET installation is not required.
+Microsoft .NET is open-source software. License and third-party notices:
+https://github.com/dotnet/runtime/blob/v8.0.0/LICENSE.TXT
+https://github.com/dotnet/runtime/blob/v8.0.0/THIRD-PARTY-NOTICES.TXT
+https://github.com/dotnet/windowsdesktop
+
+FFmpeg 9.0.2 essentials (Gyan Windows build)
+FFmpeg runs as a separate executable in the tools folder.
+The GPL v3 license is included as tools/FFmpeg-LICENSE.txt.
+Build provider, source/build information and source-code links:
+https://www.gyan.dev/ffmpeg/builds/
+https://ffmpeg.org/download.html
+Do not remove the third-party license notices when copying this application.
+
+NDI
+NDI is a registered trademark of Vizrt NDI AB.
+The official NDI Runtime redistributable is included in Setup and used only
+when no supported NDI runtime is already installed. It displays its own
+license agreement. The NDI runtime remains separately installed and is not
+removed when UDP to NDI is uninstalled.
+https://ndi.video/
+https://docs.ndi.video/all/developing-with-ndi/sdk/software-distribution
+
+Saved slots are held in the current user's LocalAppData/UdpToNdi folder.
+Uninstalling UDP to NDI preserves these settings and all Windows NDI settings.

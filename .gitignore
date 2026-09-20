@@ -1,0 +1,11 @@
+bin/
+obj/
+dist/
+tools/
+*.user
+test-results/
+.env
+.env.*
+!.env.example
+*.pfx
+*.key
