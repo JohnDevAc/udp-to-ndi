@@ -1,0 +1,29 @@
+UDP to NDI — application and third-party terms
+
+Created by John Lightfoot. Copyright (c) 2026 John Lightfoot.
+
+ORIGINAL APPLICATION
+The original application source code, documentation and icon are licensed under the MIT License included in LICENSE. You may use, modify and redistribute them under that licence, including commercially. No ownership of third-party software is claimed. The provisions below do not restrict rights granted for the original application under MIT or for FFmpeg, .NET or other open-source components under their own licences.
+
+NDI COMPONENTS
+NDI is proprietary software, separately licensed by its owners. NDI is a registered trademark of Vizrt NDI AB. NDI components: Copyright (c) 2023-2026 Vizrt NDI AB. All rights reserved. NDI, Inc. and its licensors retain their applicable copyright rights. This application is independently developed and is not sponsored, certified or endorsed by NDI.
+
+The following provisions apply to NDI's SDK, Specific SDK, runtime, NDI Products and their protocols, not to the MIT application or FFmpeg:
+- You must not modify those NDI components, or reverse engineer, disassemble, decompile or recompile them, or attempt to discover their source, structure or protocols, including protocols sent or received over a network or used internally or externally to a machine, except to the extent permitted by applicable law or NDI's agreement.
+- You must not circumvent their technical limitations or remove, obscure or alter their proprietary notices or labels.
+- NDI and each of its licensors provide no warranties, express or implied, including merchantability, fitness for a particular purpose and non-infringement. To the extent permitted by applicable law, NDI and its licensors disclaim liability for any direct, indirect, incidental or consequential damages arising from the application or bundled products.
+- You must comply with applicable United States export laws and regulations and applicable trade sanctions. You must not directly or indirectly export or re-export NDI components in violation of those laws.
+- Third-party developers using this product to develop products using NDI must comply with the NDI SDK licence, maintain current and complete NDI compatibility, and include the requirements of section 3(d) of that licence in their own end-user agreements.
+
+Use of NDI is subject to its applicable runtime licence and SDK requirements. The official runtime installer displays its own licence when installing it. Its terms remain applicable if it is already installed. The standard SDK is intended for eligible software on general-purpose computers; fixed-purpose appliances and restricted hosted/cloud environments may require a separate commercial agreement with NDI. MIT does not grant rights to NDI or codec patents.
+
+NDI website: https://ndi.video/
+NDI SDK agreement: https://downloads.ndi.tv/SDK/NDI_SDK/NDI%20SDK%20License%20Agreement.pdf
+NDI licensing: https://docs.ndi.video/all/developing-with-ndi/sdk/licensing
+
+FFMPEG AND OPEN-SOURCE COMPONENTS
+FFmpeg is a separate executable invoked using its command-line interface and ordinary media pipes/sockets; it is not linked into the original application. FFmpeg and its dependencies remain subject to their own licences. No NDI-specific reverse-engineering restrictions apply to FFmpeg or other open-source software. You may exercise their licence-granted rights independently. The tested Gyan essentials build is GPL version 3; its licence is included in licenses/FFmpeg-GPL-3.0.txt.
+
+Microsoft .NET components are provided under their own open-source licences and notices, included in licenses. See THIRD-PARTY-NOTICES.txt for component information and download/source locations.
+
+Codec patent obligations can depend on use and jurisdiction. These copyright licences do not constitute patent clearance or an assertion that a commercial product requires no additional rights.

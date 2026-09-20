@@ -10,6 +10,7 @@
     <Authors>John Lightfoot</Authors>
     <Copyright>Copyright (c) 2026 John Lightfoot</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.0.2</Version>
     <ApplicationIcon>assets\app.ico</ApplicationIcon>
     <AssemblyName>UDP to NDI</AssemblyName>
     <DefaultItemExcludes>$(DefaultItemExcludes);tools/**;dist/**;test-results/**</DefaultItemExcludes>

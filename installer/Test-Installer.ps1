@@ -1,8 +1,11 @@
+param(
+    [string]$SetupFile = (Join-Path (Split-Path $PSScriptRoot -Parent) 'dist\installer\UDP-to-NDI-Setup-1.0.2-x64.exe'),
+    [switch]$ExpectMissingFfmpeg
+)
 $ErrorActionPreference = 'Stop'
 $workspace = Split-Path $PSScriptRoot -Parent
 $results = Join-Path $workspace 'test-results'
 $target = Join-Path $results 'installer-smoke-app'
-$setupFile = Join-Path $workspace 'dist\installer\UDP-to-NDI-Setup-1.0.1-x64.exe'
 $registration = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{270E6A76-82C3-4376-8CAA-5A1E759092E0}_is1'
 if (Test-Path -LiteralPath $registration) { throw 'An installed copy already exists. Use an isolated Windows account for this smoke test.' }
 if (Test-Path -LiteralPath $target) { throw 'The smoke-test destination already exists; inspect it before testing again.' }
@@ -13,7 +16,7 @@ function FileHash([string]$path) { if (Test-Path -LiteralPath $path) { (Get-File
 $settingsBefore = FileHash $settingsFile
 $ndiBefore = FileHash $ndiFile
 $installLog = Join-Path $results 'installer-install.log'
-$summary = Join-Path $results 'installer-smoke.txt'
+$summary = Join-Path $results $(if ($ExpectMissingFfmpeg) { 'installer-offline-smoke.txt' } else { 'installer-smoke.txt' })
 $installed = $false
 try {
     $setupArgs = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/TASKS=', ('/DIR="' + $target + '"'), '/GROUP="UDP to NDI Installer Verification"', ('/LOG="' + $installLog + '"'))
@@ -22,10 +25,12 @@ try {
     if ($setup.ExitCode -ne 0) { throw "Installation failed: $($setup.ExitCode)" }
     $installed = $true
     Set-Content -LiteralPath $summary -Value 'PASS: silent per-user installation completed.'
-    foreach ($required in @('UDP to NDI.exe', 'coreclr.dll', 'hostfxr.dll', 'tools\ffmpeg.exe', 'tools\FFmpeg-LICENSE.txt', 'licenses\Microsoft.NETCore.App-LICENSE.txt', 'unins000.exe')) {
+    $requiredFiles = @('UDP to NDI.exe', 'coreclr.dll', 'hostfxr.dll', 'LICENSE', 'THIRD-PARTY-TERMS.txt', 'THIRD-PARTY-NOTICES.txt', 'licenses\FFmpeg-GPL-3.0.txt', 'licenses\Microsoft.NETCore.App-LICENSE.txt', 'unins000.exe')
+    if (!$ExpectMissingFfmpeg) { $requiredFiles += @('tools\ffmpeg.exe', 'tools\FFmpeg-LICENSE.txt', 'tools\FFmpeg-README.txt') }
+    foreach ($required in $requiredFiles) {
         if (!(Test-Path -LiteralPath (Join-Path $target $required))) { throw "Installed file missing: $required" }
     }
-    Add-Content -LiteralPath $summary -Value 'PASS: app, local .NET runtime, FFmpeg, licenses and uninstaller are present.'
+    Add-Content -LiteralPath $summary -Value 'PASS: app, local .NET runtime, terms, licenses and uninstaller are present.'
     $shortcut = Join-Path ([Environment]::GetFolderPath('Programs')) 'UDP to NDI\UDP to NDI.lnk'
     if (!(Test-Path -LiteralPath $shortcut)) { throw 'Start menu shortcut missing.' }
     Add-Content -LiteralPath $summary -Value 'PASS: Start menu shortcut created.'
@@ -33,9 +38,17 @@ try {
     if (!$app.WaitForExit(15000)) { $app.Kill(); throw 'Installed application did not complete its UI smoke test.' }
     if ($app.ExitCode -ne 0) { throw "Installed application failed: $($app.ExitCode)" }
     Add-Content -LiteralPath $summary -Value 'PASS: installed application launches and renders both windows.'
-    & (Join-Path $target 'tools\ffmpeg.exe') -version | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw 'Installed FFmpeg failed.' }
-    Add-Content -LiteralPath $summary -Value 'PASS: installed FFmpeg runs.'
+    if ($ExpectMissingFfmpeg) {
+        if (Test-Path -LiteralPath (Join-Path $target 'tools\ffmpeg.exe')) { throw 'FFmpeg should not be present after a failed download.' }
+        if (!(Select-String -LiteralPath $installLog -SimpleMatch 'FFmpeg download unavailable:' -Quiet)) { throw 'Download failure was not recorded.' }
+        if (!(Select-String -LiteralPath $installLog -SimpleMatch 'Setup will continue without it.' -Quiet)) { throw 'Manual setup guidance was not recorded.' }
+        Add-Content -LiteralPath $summary -Value 'PASS: failed download gives manual setup guidance; installation and app launch still succeed without FFmpeg.'
+    } else {
+        if ((Get-FileHash -LiteralPath (Join-Path $target 'tools\ffmpeg.exe')).Hash -ne '3256173F3F8BFFD7DF12227C68ADF68025EDB1832273A9530688A7BB1ED8EDEC') { throw 'Downloaded FFmpeg differs from verified provider binary.' }
+        & (Join-Path $target 'tools\ffmpeg.exe') -version | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw 'Installed FFmpeg failed.' }
+        Add-Content -LiteralPath $summary -Value 'PASS: directly downloaded FFmpeg matches the expected checksum and runs.'
+    }
 }
 finally {
     if ($installed) {

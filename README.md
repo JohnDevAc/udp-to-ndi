@@ -10,13 +10,13 @@ A Windows x64 desktop application with **10 independently controlled audio/video
 
 ### Windows installer
 
-After building the installer, run `dist/installer/UDP-to-NDI-Setup-1.0.1-x64.exe`. It installs the latest app for the current Windows user, adds a Start menu shortcut and offers a desktop shortcut. .NET Desktop Runtime and FFmpeg are bundled. If NDI is missing, Setup launches the included official NDI Runtime installer, which may request administrator access and displays its own license. Existing Windows NDI settings are retained. Installed location: `%LOCALAPPDATA%/Programs/UDP to NDI`.
+Download the installer from [GitHub Releases](https://github.com/JohnDevAc/udp-to-ndi/releases/latest), or build it locally and run `dist/installer/UDP-to-NDI-Setup-1.0.2-x64.exe`. It installs the latest app for the current Windows user, adds a Start menu shortcut and offers a desktop shortcut. .NET Desktop Runtime is bundled. Setup downloads FFmpeg directly from its provider over HTTPS and verifies a pinned SHA-256 checksum. If the download fails, installation finishes with manual setup instructions. If NDI is missing, Setup launches the included official NDI Runtime installer, which may request administrator access and displays its own license. Existing Windows NDI settings are retained. Installed location: `%LOCALAPPDATA%/Programs/UDP to NDI`.
 
 Remove the app through Windows Settings → Apps. Uninstallation preserves your saved slots and the shared NDI Runtime. The installer is unsigned. Build it again with `build-installer.ps1`; this requires Inno Setup and the NDI SDK redistributable.
 
 ### Portable builds
 
-`build.ps1` publishes to `dist`; an alternative output folder can be selected with `-OutputDirectory`. Each packaged build includes FFmpeg in its `tools` subfolder. The NDI 6 Runtime (or NDI Tools) must be installed. The framework-dependent build also needs .NET Desktop Runtime 8 x64.
+`build.ps1` publishes to `dist/portable-1.0.2`; an alternative output folder can be selected with `-OutputDirectory`. Portable builds do not include FFmpeg: download and extract a Windows build, then select `bin/ffmpeg.exe` using **More → Choose FFmpeg…**. The NDI 6 Runtime (or NDI Tools) must be installed. The framework-dependent build also needs .NET Desktop Runtime 8 x64.
 
 1. Click **Edit** on a slot.
 2. Choose **RTP H264**, **RTP H265**, **RTP MPEG-TS**, **UDP MPEG-TS**, or **SDP file**.
@@ -32,7 +32,7 @@ Remove the app through Windows Settings → Apps. Uninstallation preserves your 
 
 Audio is included automatically; there are no audio setup switches. The first audio track is decoded to floating-point PCM and sent through the same NDI source, retaining its detected sample rate and channel count (up to 64 channels). Video-only sources continue to work.
 
-MPEG-TS over UDP or RTP can carry video and audio together. Plain H264/H265 RTP payloads are video-only: for separate RTP audio and video tracks, load the encoder's SDP file describing **both** media sections, payload mappings and ports. AAC and other codecs supported by the bundled FFmpeg are decoded; compressed audio is not copied into NDI unchanged. Multiple alternative language/program audio tracks are not combined.
+MPEG-TS over UDP or RTP can carry video and audio together. Plain H264/H265 RTP payloads are video-only: for separate RTP audio and video tracks, load the encoder's SDP file describing **both** media sections, payload mappings and ports. AAC and other codecs supported by the configured FFmpeg are decoded; compressed audio is not copied into NDI unchanged. Multiple alternative language/program audio tracks are not combined.
 
 Audio and video use one source-timestamp timeline for pacing and NDI timecodes, preserving their relative offsets. Normalized PCM is mapped to NDI's SMPTE reference level (full-scale PCM corresponds to 10.0 NDI floating-point units). No stereo downmix or forced 48 kHz conversion is applied. An audio format change causes automatic decoder reopening. A source that starts without audio is rechecked for audio when it reconnects; adding an entirely new audio track to a continuously running video-only source may require stopping and starting that slot.
 
@@ -56,7 +56,7 @@ Settings: `%LOCALAPPDATA%/UdpToNdi/settings.json`. Configuring a slot saves all 
 
 Requires .NET SDK 8 and Windows x64. No additional NuGet dependencies.
 
-Before packaging, place an FFmpeg Windows executable in `tools/ffmpeg.exe` and its accompanying licence in `tools/ffmpeg-package/LICENSE`. Obtain it from the [FFmpeg download page](https://ffmpeg.org/download.html). Install the NDI Runtime for running/testing. Building the installer also requires Inno Setup 6 and the official NDI SDK redistributable; pass their paths to `build-installer.ps1` using `-CompilerPath` and `-NdiRedistributable` if needed.
+For local media testing, place an FFmpeg Windows executable in `tools/ffmpeg.exe`. Release builds intentionally do not embed it. Obtain it from the [FFmpeg download page](https://ffmpeg.org/download.html). Install the NDI Runtime for running/testing. Building the installer also requires Inno Setup 6 and the official NDI SDK redistributable; pass their paths to `build-installer.ps1` using `-CompilerPath` and `-NdiRedistributable` if needed.
 
 ```powershell
 dotnet build -c Release
@@ -69,7 +69,7 @@ Tests validate the ABI, input configuration and SDP generation; generate local R
 
 Audio tests receive actual NDI samples from 48 kHz stereo and 44.1 kHz mono sources, plus separate RTP media tracks described by SDP. Run `--recovery-test` for the longer outage test: it waits through two complete timeout/retry cycles before a source appears, then removes and restores the source, verifies both audio and video recover, and verifies the NDI sender instance is retained. It uses local UDP port 25300 and writes `test-results/recovery-test.txt`.
 
-**More… → Choose FFmpeg…** selects an alternative `ffmpeg.exe`. `build.ps1` copies the local tools binary into the runnable output directory. FFmpeg was obtained from the Windows build provider linked on FFmpeg's download page. Its license is included with the executable. NDI is dynamically loaded from the user's installation. The installer build includes the official NDI Runtime redistributable separately. Review FFmpeg's GPL distribution obligations and NDI's SDK terms before distributing a binary package to others.
+**More… → Choose FFmpeg…** selects an alternative `ffmpeg.exe`. Release build scripts do not copy the local FFmpeg binary into the package. FFmpeg was obtained from the Windows build provider linked on FFmpeg's download page. Its license is included with the executable. NDI is dynamically loaded from the user's installation. The installer build includes the official NDI Runtime redistributable separately. Review FFmpeg's GPL distribution obligations and NDI's SDK terms before distributing a binary package to others.
 
 References:
 
@@ -83,3 +83,17 @@ Activity is hidden by default; click **Activity** to open the log. **More…** c
 
 
 Run `--ten-stream-test` for ten simultaneous 640×360/25 fps UDP MPEG-TS sources with 48 kHz stereo audio and ten NDI receivers. It uses ports 25400–25418 and writes `test-results/ten-stream-test.txt`.
+
+## Licences and manual dependency setup
+
+[NDI®](https://ndi.video/) is a registered trademark of Vizrt NDI AB. This independent application is not sponsored or endorsed by NDI. NDI components remain proprietary; the app's MIT licence does not relicense them. Setup presents [third-party terms](installer/THIRD-PARTY-TERMS.txt), and **More → Licences and credits** makes them accessible afterwards. Standard NDI SDK permissions do not cover every appliance or restricted cloud deployment.
+
+From 1.0.2 onward, FFmpeg is downloaded directly from [Gyan's release](https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2), not embedded or rehosted in our installer. This is a GPLv3 build with separate licence rights. If automatic downloading fails:
+
+1. Download the **release essentials ZIP** from [Gyan's FFmpeg builds](https://www.gyan.dev/ffmpeg/builds/).
+2. Extract it into a permanent folder on your PC.
+3. In the app, open **More → Choose FFmpeg…** and select the extracted `bin/ffmpeg.exe`.
+
+Use **More → Download FFmpeg** to open that page. You can also rerun the installer when internet access is available. For deliberately offline setup, `/SKIPFFMPEGDOWNLOAD=1` skips the download; the finishing page gives manual instructions. The official NDI Runtime installer remains embedded, and .NET remains bundled.
+
+[Read the licensing review](docs/LICENSING-REVIEW.md), including the unresolved corresponding-source gap in the withdrawn 1.0.1 binary release. That old installer is no longer offered publicly. Downloading from the provider does not certify its compliance, and codec patent questions depend on jurisdiction and use. Do not redistribute downloaded FFmpeg binaries without fulfilling their applicable source and notice requirements.

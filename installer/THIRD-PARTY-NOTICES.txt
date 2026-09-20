@@ -1,28 +1,63 @@
-UDP to NDI - bundled components
+UDP to NDI — third-party notices
 
-Microsoft .NET 8 and Windows Desktop runtime
-Included with this application so a separate .NET installation is not required.
-Microsoft .NET is open-source software. License and third-party notices:
-https://github.com/dotnet/runtime/blob/v8.0.0/LICENSE.TXT
-https://github.com/dotnet/runtime/blob/v8.0.0/THIRD-PARTY-NOTICES.TXT
-https://github.com/dotnet/windowsdesktop
-
-FFmpeg 9.0.2 essentials (Gyan Windows build)
-FFmpeg runs as a separate executable in the tools folder.
-The GPL v3 license is included as tools/FFmpeg-LICENSE.txt.
-Build provider, source/build information and source-code links:
-https://www.gyan.dev/ffmpeg/builds/
-https://ffmpeg.org/download.html
-Do not remove the third-party license notices when copying this application.
+Original application
+Created by John Lightfoot. Copyright (c) 2026 John Lightfoot. MIT License (LICENSE).
 
 NDI
 NDI is a registered trademark of Vizrt NDI AB.
-The official NDI Runtime redistributable is included in Setup and used only
-when no supported NDI runtime is already installed. It displays its own
-license agreement. The NDI runtime remains separately installed and is not
-removed when UDP to NDI is uninstalled.
-https://ndi.video/
-https://docs.ndi.video/all/developing-with-ndi/sdk/software-distribution
+NDI components: Copyright (c) 2023-2026 Vizrt NDI AB. All rights reserved.
+NDI, Inc. and its licensors retain their applicable copyright rights.
+This independent application is compatible with NDI; it is not sponsored,
+certified or endorsed by NDI.
 
-Saved slots are held in the current user's LocalAppData/UdpToNdi folder.
-Uninstalling UDP to NDI preserves these settings and all Windows NDI settings.
+Setup includes the official NDI 6.3.2 Runtime redistributable from the SDK Redist
+folder. It is launched interactively only when a supported runtime is missing.
+NDI's own licence is shown by its installer. Setup also presents the scoped
+NDI end-user terms in THIRD-PARTY-TERMS.txt, even if a runtime already exists.
+Windows NDI settings are retained. The shared runtime is not uninstalled with
+this application.
+https://ndi.video/
+https://docs.ndi.video/all/developing-with-ndi/sdk/licensing
+https://docs.ndi.video/all/developing-with-ndi/sdk/software-distribution
+https://downloads.ndi.tv/SDK/NDI_SDK/NDI%20SDK%20License%20Agreement.pdf
+
+FFmpeg
+Copyright (c) 2000-2026 the FFmpeg developers.
+FFmpeg is a trademark of Fabrice Bellard.
+The app invokes FFmpeg as a separate command-line program, using ordinary
+media pipes and sockets; it does not link FFmpeg libraries into the app.
+Starting with 1.0.2, this project's installers do NOT embed an FFmpeg executable.
+Setup downloads Gyan's unmodified 9.0.2 essentials ZIP directly from the build
+provider's GitHub release, verifies SHA-256, and installs ffmpeg.exe with the
+provider's LICENSE and README. The tested build is GPLv3, not LGPL.
+No NDI restrictions in this package apply to FFmpeg or your GPL rights.
+
+Provider download:
+https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip
+Archive SHA-256:
+60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba
+Project: https://ffmpeg.org/
+Build provider: https://www.gyan.dev/ffmpeg/builds/
+Provider's FFmpeg source reference: https://github.com/FFmpeg/FFmpeg/commit/946fcce07b
+GPLv3 text: licenses/FFmpeg-GPL-3.0.txt
+Downloaded provider files: tools/FFmpeg-LICENSE.txt and tools/FFmpeg-README.txt
+The source reference above is the FFmpeg core reference, NOT a verified complete
+source package for every statically linked dependency in the provider's build.
+Do not redistribute the downloaded binary as part of this app without separately
+fulfilling the applicable corresponding-source and notice obligations.
+
+If download fails, Setup can finish without FFmpeg. Download the Windows
+release essentials ZIP from the provider and extract it. In UDP to NDI choose
+More > Choose FFmpeg, then select bin\ffmpeg.exe. More > Download FFmpeg opens
+the provider page. Setup can also be rerun with a working internet connection.
+
+Microsoft .NET 8 and Windows Desktop runtime
+Included with the installer so a separate .NET installation is not required.
+Original runtime licence and third-party notices are in licenses/.
+https://github.com/dotnet/runtime
+https://github.com/dotnet/windowsdesktop
+
+Licence scope
+MIT covers the original application, not NDI, FFmpeg or Microsoft components.
+Copyright licences do not establish clearance for every codec patent or use.
+See THIRD-PARTY-TERMS.txt and docs/LICENSING-REVIEW.md in the source repository.

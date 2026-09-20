@@ -21,6 +21,10 @@ public sealed class SlotDialog : Form
         TextBox TextField(string title, string value) { var box = new TextBox { Text = value }; Add(title, box); return box; }
         NumericUpDown Number(string title, int value, int min, int max) { var box = new NumericUpDown { Minimum = min, Maximum = max, Value = Math.Clamp(value, min, max) }; Add(title, box); return box; }
         var name = TextField("NDI name", original.Name);
+        var nameLabel = form.GetControlFromPosition(0, 0)!;
+        form.Controls.Remove(nameLabel); nameLabel.Dispose();
+        var ndiLabel = LegalUi.NdiLink(Point.Empty); ndiLabel.Text = "NDI® name"; ndiLabel.Anchor = AnchorStyles.Left;
+        form.Controls.Add(ndiLabel, 0, 0);
         var input = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList }; input.Items.AddRange(["RTP H264", "RTP H265", "RTP MPEG-TS", "UDP MPEG-TS", "SDP file"]); input.SelectedItem = original.Input; Add("Input format", input);
         var address = TextField("Listen address", original.Address);
         var port = Number("Port", original.Port, 1024, 65534);

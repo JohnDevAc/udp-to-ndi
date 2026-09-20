@@ -35,7 +35,7 @@ public sealed class SlotRunner
     {
         if (Running) return;
         settings.Validate();
-        if (!File.Exists(ffmpeg)) throw new FileNotFoundException("Choose ffmpeg.exe using the FFmpeg button.", ffmpeg);
+        if (!File.Exists(ffmpeg)) throw new FileNotFoundException("FFmpeg is not configured. Download the Windows essentials ZIP from https://www.gyan.dev/ffmpeg/builds/ and extract it. Then choose More → Choose FFmpeg and select bin\\ffmpeg.exe. Use More → Download FFmpeg to open the download page.");
         Ndi.Initialize();
         stop?.Dispose(); stop = new();
         frames = 0; detail = ""; state = "Starting"; DetectedFormat = null; SourceDescription = "";

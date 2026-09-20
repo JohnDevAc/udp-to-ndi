@@ -1,16 +1,14 @@
-param([string]$OutputDirectory = 'dist')
+param([string]$OutputDirectory = 'dist/portable-1.0.2')
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 try {
     dotnet publish UdpNdi.csproj -c Release -r win-x64 --self-contained false -o $OutputDirectory
     if ($LASTEXITCODE -ne 0) { throw 'Publish failed.' }
-    if (!(Test-Path -LiteralPath 'tools\ffmpeg.exe')) { throw 'Place ffmpeg.exe in tools before packaging. See README.md.' }
-    $outputTools = Join-Path $OutputDirectory 'tools'
-    New-Item -ItemType Directory -Force $outputTools | Out-Null
-    Copy-Item -LiteralPath 'tools\ffmpeg.exe' -Destination (Join-Path $outputTools 'ffmpeg.exe')
-    $license = Get-ChildItem -LiteralPath 'tools\ffmpeg-package' -Filter LICENSE -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-    if ($license) { Copy-Item -LiteralPath $license.FullName -Destination (Join-Path $outputTools 'FFmpeg-LICENSE.txt') }
-    Copy-Item -LiteralPath 'README.md','LICENSE','installer\THIRD-PARTY-NOTICES.txt' -Destination $OutputDirectory
+    if (Test-Path -LiteralPath (Join-Path $OutputDirectory 'tools\ffmpeg.exe')) { throw 'Release payload must not contain FFmpeg. Use a clean output directory.' }
+    Copy-Item -LiteralPath 'README.md','LICENSE','installer\THIRD-PARTY-NOTICES.txt','installer\THIRD-PARTY-TERMS.txt' -Destination $OutputDirectory
+    $licenses = Join-Path $OutputDirectory 'licenses'
+    New-Item -ItemType Directory -Force $licenses | Out-Null
+    Copy-Item -LiteralPath 'licenses\FFmpeg-GPL-3.0.txt' -Destination $licenses
     Write-Output "Ready: $OutputDirectory\UDP to NDI.exe"
 }
 finally { Pop-Location }

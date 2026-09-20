@@ -28,6 +28,7 @@ public sealed class MainForm : Form
         var header = new Panel { Dock = DockStyle.Fill };
         header.Controls.Add(new PictureBox { Image = Icon?.ToBitmap(), SizeMode = PictureBoxSizeMode.Zoom, Bounds = new(0, 4, 36, 36) });
         header.Controls.Add(new Label { Text = "UDP to NDI", Font = new("Segoe UI Semibold", 22), AutoSize = true, Location = new(48, 0) });
+        header.Controls.Add(LegalUi.NdiLink(new Point(48, 40)));
         summary.Dock = DockStyle.Right; summary.Width = 330; summary.TextAlign = ContentAlignment.MiddleRight; summary.Padding = new(0, 0, 0, 16); summary.ForeColor = Color.LightSteelBlue;
         header.Controls.Add(summary); layout.Controls.Add(header, 0, 0);
         buttons.Dock = DockStyle.Fill; buttons.WrapContents = false;
@@ -50,7 +51,9 @@ public sealed class MainForm : Form
         var more = AddButton("More…", () => { });
         var menu = new ContextMenuStrip();
         menu.Items.Add("Choose FFmpeg…", null, (_, _) => Guard(SelectFfmpeg));
+        menu.Items.Add("Download FFmpeg", null, (_, _) => Guard(() => Process.Start(new ProcessStartInfo("https://www.gyan.dev/ffmpeg/builds/") { UseShellExecute = true })));
         menu.Items.Add("Open guide", null, (_, _) => Guard(() => Process.Start(new ProcessStartInfo(Path.Combine(AppContext.BaseDirectory, "README.md")) { UseShellExecute = true })));
+        menu.Items.Add("Licences and credits", null, (_, _) => LegalUi.Show(this));
         more.Click += (_, _) => menu.Show(more, new Point(0, more.Height));
         FormClosed += (_, _) => menu.Dispose();
         layout.Controls.Add(buttons, 0, 1);
@@ -125,7 +128,7 @@ public sealed class MainForm : Form
         }
         int liveCount = runners.Count(r => r.State == "Live");
         int waitingCount = runners.Count(r => r.Running && r.State != "Live");
-        summary.Text = liveCount + waitingCount == 0 ? "10 slots · Ready" : $"{liveCount} live · {waitingCount} waiting";
+        summary.Text = liveCount + waitingCount == 0 ? (File.Exists(settings.Ffmpeg) ? "10 slots · Ready" : "FFmpeg needed · see More") : $"{liveCount} live · {waitingCount} waiting";
     }
     void Start(int i)
     {
