@@ -8,14 +8,14 @@
   #define FfmpegUrl "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip"
 #endif
 #ifndef SetupName
-  #define SetupName "UDP-to-NDI-Setup-1.0.2-x64"
+  #define SetupName "UDP-to-NDI-Setup-1.0.3-x64"
 #endif
 
 [Setup]
 AppId={{270E6A76-82C3-4376-8CAA-5A1E759092E0}
 AppName=UDP to NDI
-AppVersion=1.0.2
-AppVerName=UDP to NDI 1.0.2
+AppVersion=1.0.3
+AppVerName=UDP to NDI 1.0.3
 AppPublisher=John Lightfoot
 DefaultDirName={localappdata}\Programs\UDP to NDI
 DefaultGroupName=UDP to NDI
@@ -34,7 +34,7 @@ SetupLogging=yes
 UninstallDisplayIcon={app}\UDP to NDI.exe
 CloseApplications=yes
 RestartApplications=no
-VersionInfoVersion=1.0.2.0
+VersionInfoVersion=1.0.3.0
 VersionInfoDescription=UDP to NDI Installer
 LicenseFile=THIRD-PARTY-TERMS.txt
 ArchiveExtraction=full

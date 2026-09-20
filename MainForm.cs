@@ -16,19 +16,19 @@ public sealed class MainForm : Form
     bool closing;
     public MainForm()
     {
-        Text = "UDP to NDI"; ClientSize = new(1180, 610); MinimumSize = new(1060, 650);
+        Text = "UDP to NDI"; ClientSize = new(1180, 634); MinimumSize = new(1060, 674);
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
         StartPosition = FormStartPosition.CenterScreen;
         Font = new("Segoe UI", 10); BackColor = Color.FromArgb(18, 24, 34); ForeColor = Color.WhiteSmoke;
         try { settings = AppSettings.Load(); }
         catch (Exception ex) { settings = new(); MessageBox.Show($"Could not load saved settings. Defaults are shown; the original file is retained until you save.\n\n{ex.Message}", "Settings"); }
-        var layout = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new(20), ColumnCount = 1, RowCount = 4 };
+        var layout = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new(20), ColumnCount = 1, RowCount = 5 };
         layout.RowStyles.Add(new(SizeType.Absolute, 64)); layout.RowStyles.Add(new(SizeType.Absolute, 52));
         layout.RowStyles.Add(new(SizeType.Percent, 100)); layout.RowStyles.Add(new(SizeType.Absolute, 0));
+        layout.RowStyles.Add(new(SizeType.Absolute, 24));
         var header = new Panel { Dock = DockStyle.Fill };
         header.Controls.Add(new PictureBox { Image = Icon?.ToBitmap(), SizeMode = PictureBoxSizeMode.Zoom, Bounds = new(0, 4, 36, 36) });
         header.Controls.Add(new Label { Text = "UDP to NDI", Font = new("Segoe UI Semibold", 22), AutoSize = true, Location = new(48, 0) });
-        header.Controls.Add(LegalUi.NdiLink(new Point(48, 40)));
         summary.Dock = DockStyle.Right; summary.Width = 330; summary.TextAlign = ContentAlignment.MiddleRight; summary.Padding = new(0, 0, 0, 16); summary.ForeColor = Color.LightSteelBlue;
         header.Controls.Add(summary); layout.Controls.Add(header, 0, 0);
         buttons.Dock = DockStyle.Fill; buttons.WrapContents = false;
@@ -88,7 +88,11 @@ public sealed class MainForm : Form
         log.Dock = DockStyle.Fill; log.Multiline = true; log.ReadOnly = true; log.ScrollBars = ScrollBars.Vertical;
         log.BackColor = Color.FromArgb(12, 18, 26); log.ForeColor = Color.LightSteelBlue; log.Font = new("Consolas", 9); log.BorderStyle = BorderStyle.FixedSingle;
         log.Visible = false; log.Margin = new(3, 12, 3, 3);
-        layout.Controls.Add(log, 0, 3); Controls.Add(layout);
+        layout.Controls.Add(log, 0, 3);
+        var ndiLink = LegalUi.NdiLink(Point.Empty);
+        ndiLink.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
+        ndiLink.Margin = new(3, 6, 3, 0);
+        layout.Controls.Add(ndiLink, 0, 4); Controls.Add(layout);
         timer.Tick += (_, _) =>
         {
             RefreshRows();

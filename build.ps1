@@ -1,4 +1,4 @@
-param([string]$OutputDirectory = 'dist/portable-1.0.2')
+param([string]$OutputDirectory = 'dist/portable-1.0.3')
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 try {

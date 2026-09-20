@@ -7,7 +7,7 @@ Push-Location $PSScriptRoot
 try {
     if (!(Test-Path -LiteralPath $CompilerPath)) { throw 'Inno Setup compiler not found. Install Inno Setup 6 and supply -CompilerPath.' }
     if (!(Test-Path -LiteralPath $NdiRedistributable)) { throw 'NDI Runtime redistributable not found. Supply -NdiRedistributable.' }
-    $payload = Join-Path $PSScriptRoot 'dist\installer-payload-1.0.2'
+    $payload = Join-Path $PSScriptRoot 'dist\installer-payload-1.0.3'
     dotnet publish UdpNdi.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o $payload
     if ($LASTEXITCODE -ne 0) { throw 'Self-contained publish failed.' }
     if (Test-Path -LiteralPath (Join-Path $payload 'tools\ffmpeg.exe')) { throw 'Release payload must not contain FFmpeg. Use a clean payload directory.' }
@@ -27,9 +27,9 @@ try {
     }
     & $CompilerPath '/Q' "/DPayloadDir=$payload" "/DRedistFile=$NdiRedistributable" 'installer\Setup.iss'
     if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed.' }
-    $installer = Join-Path $PSScriptRoot 'dist\installer\UDP-to-NDI-Setup-1.0.2-x64.exe'
+    $installer = Join-Path $PSScriptRoot 'dist\installer\UDP-to-NDI-Setup-1.0.3-x64.exe'
     $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash
-    Set-Content -LiteralPath ($installer + '.sha256') -Value "$hash  UDP-to-NDI-Setup-1.0.2-x64.exe"
+    Set-Content -LiteralPath ($installer + '.sha256') -Value "$hash  UDP-to-NDI-Setup-1.0.3-x64.exe"
     Get-Item -LiteralPath $installer | Select-Object FullName,Length
 }
 finally { Pop-Location }

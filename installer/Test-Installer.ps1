@@ -1,5 +1,5 @@
 param(
-    [string]$SetupFile = (Join-Path (Split-Path $PSScriptRoot -Parent) 'dist\installer\UDP-to-NDI-Setup-1.0.2-x64.exe'),
+    [string]$SetupFile = (Join-Path (Split-Path $PSScriptRoot -Parent) 'dist\installer\UDP-to-NDI-Setup-1.0.3-x64.exe'),
     [switch]$ExpectMissingFfmpeg
 )
 $ErrorActionPreference = 'Stop'

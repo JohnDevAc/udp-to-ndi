@@ -10,13 +10,13 @@ A Windows x64 desktop application with **10 independently controlled audio/video
 
 ### Windows installer
 
-Download the installer from [GitHub Releases](https://github.com/JohnDevAc/udp-to-ndi/releases/latest), or build it locally and run `dist/installer/UDP-to-NDI-Setup-1.0.2-x64.exe`. It installs the latest app for the current Windows user, adds a Start menu shortcut and offers a desktop shortcut. .NET Desktop Runtime is bundled. Setup downloads FFmpeg directly from its provider over HTTPS and verifies a pinned SHA-256 checksum. If the download fails, installation finishes with manual setup instructions. If NDI is missing, Setup launches the included official NDI Runtime installer, which may request administrator access and displays its own license. Existing Windows NDI settings are retained. Installed location: `%LOCALAPPDATA%/Programs/UDP to NDI`.
+Download the installer from [GitHub Releases](https://github.com/JohnDevAc/udp-to-ndi/releases/latest), or build it locally and run `dist/installer/UDP-to-NDI-Setup-1.0.3-x64.exe`. It installs the latest app for the current Windows user, adds a Start menu shortcut and offers a desktop shortcut. .NET Desktop Runtime is bundled. Setup downloads FFmpeg directly from its provider over HTTPS and verifies a pinned SHA-256 checksum. If the download fails, installation finishes with manual setup instructions. If NDI is missing, Setup launches the included official NDI Runtime installer, which may request administrator access and displays its own license. Existing Windows NDI settings are retained. Installed location: `%LOCALAPPDATA%/Programs/UDP to NDI`.
 
 Remove the app through Windows Settings → Apps. Uninstallation preserves your saved slots and the shared NDI Runtime. The installer is unsigned. Build it again with `build-installer.ps1`; this requires Inno Setup and the NDI SDK redistributable.
 
 ### Portable builds
 
-`build.ps1` publishes to `dist/portable-1.0.2`; an alternative output folder can be selected with `-OutputDirectory`. Portable builds do not include FFmpeg: download and extract a Windows build, then select `bin/ffmpeg.exe` using **More → Choose FFmpeg…**. The NDI 6 Runtime (or NDI Tools) must be installed. The framework-dependent build also needs .NET Desktop Runtime 8 x64.
+`build.ps1` publishes to `dist/portable-1.0.3`; an alternative output folder can be selected with `-OutputDirectory`. Portable builds do not include FFmpeg: download and extract a Windows build, then select `bin/ffmpeg.exe` using **More → Choose FFmpeg…**. The NDI 6 Runtime (or NDI Tools) must be installed. The framework-dependent build also needs .NET Desktop Runtime 8 x64.
 
 1. Click **Edit** on a slot.
 2. Choose **RTP H264**, **RTP H265**, **RTP MPEG-TS**, **UDP MPEG-TS**, or **SDP file**.
